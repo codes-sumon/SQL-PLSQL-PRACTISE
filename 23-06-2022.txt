@@ -1,0 +1,189 @@
+SELECT employee_id ID, last_name "Name", Salary "Salary", department_id "Dept."
+From employees
+Where department_id = &dpt;
+
+
+SELECT NEXT_DAY(ADD_MONTHS(sysdate+1),'thursday')
+From Dual;
+
+SELECT first_name||' '||last_name Name, Salary, hire_date "JOINING DATE", job_id JOB
+FROM employees
+WHERE hire_date NOT BETWEEN to_date('May-2003','fm Month, YYYY') and to_date('September-2007','fm Month, YYYY');
+
+SELECT first_name||' '||last_name Name, Salary, hire_date "JOINING DATE", job_id JOB
+FROM employees
+WHERE hire_date NOT BETWEEN to_date('May-2003','fm Month, YYYY') and to_date('october-2007','fm Month, YYYY');
+
+
+
+SELECT first_name||' '||last_name Name, Salary, hire_date "JOINING DATE", job_id JOB
+FROM employees
+WHERE hire_date NOT BETWEEN to_date('01-May-2003','fm Month, YYYY') and last_day(to_date('November-2007','fm Month, YYYY'));
+
+
+
+
+
+
+SELECT first_name||' '||last_name Name, Salary, hire_date "JOINING DATE", job_id JOB
+FROM employees
+WHERE hire_date NOT BETWEEN 'May-2003' and 'September-2007';
+
+
+
+Select last_name, department_id, salary
+From employees
+where department_id IN (select department_id from employees)
+And Salary IN (select Salary from employees)
+And commission_pct IN  (select commission_pct from employees where commission_pct is not null);
+
+
+
+select last_name, hire_date salary
+From employees
+where (salary, manager_id) In ( Select salary, manager_id From employees Where last_name = 'Kochhar')
+AND last_name != 'Kochhar';
+
+Select last_name, salary
+from employees
+where salary >All (Select salary From employees where job_id = 'SA_MAN');
+
+
+Select last_name, salary
+from employees
+where salary >Any (Select salary From employees where job_id = 'SA_MAN');
+
+
+
+
+SELECT last_name EName, Salary, Department_id DEPTNO, round(avg(salary),2) DEPT_AVG
+From employees
+where salary > (select avg(salary) salary from employees group by department_id);
+
+
+
+
+
+Select d.Department_name,max(salary),min(salary),avg(salary)
+From employees e , departments d
+Where (e.department_id = d.department_id)
+Group by department_name
+order by department_name;
+
+desc departments;
+
+
+
+Select employee_id, last_name,Department_id,salary
+From employees e , departments d
+Where (e.department_id = d.department_id)
+Group by department_name
+order by department_name;
+
+
+
+
+Select employee_id, last_name,Department_id,salary
+From employees
+where salary > ( Select avg(salary) From employees where UPPER(last_name) = 'TUCKER');
+
+
+Select employee_id, last_name,Department_id,salary
+From employees
+where department_id = (select department_id from employees where last_name = 'De Haan');
+
+
+
+Select e.employee_id "Emp_id", e.first_name||' '||e.last_name "name", C.country_name "CoUnTry", L.city city
+From countries c JOIN locations l
+ON(c.country_id = l.country_id)
+JOIN departments d
+ON(L.location_id = d.location_id)
+JOIN employees e
+ON (e.department_id = d.department_id);
+
+
+
+
+
+
+employees e JOIN departments d
+ON (e.department_id = d.department_id)
+JOIN locations L
+ON(L.location_id = D.location_id)
+JOIN countries C
+ON(C.country_id = D.country_id);
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------
+
+23 June 2022
+
+
+
+CREATE TABLE std_info(
+roll_no NUMBER CONSTRAINT StdInfo_Roll_PK primary key,
+Name Varchar(30) ,
+age number CONSTRAINT stdInfo_age_CK CHECK (age >=5),
+blood_group varchar(10),
+class number DEFAULT (1),
+CONSTRAINT StdInfo_name_UK UNIQUE (name));  
+
+
+
+CREATE sequence student_id_sq
+start with 100
+Increment by 1
+maxvalue 1000000;
+
+Insert INTO std_info(roll_no, Name, age, blood_group,class)
+Values(student_id_sq.NEXTVAL, 'Sumon', 23, 'AB+', 10);
+
+Insert INTO std_info(roll_no, Name, age, blood_group,class)
+Values(student_id_sq.NEXTVAL, 'Rakib', 27, 'A+',10);
+
+Insert INTO std_info(roll_no, Name, age, blood_group)
+Values(student_id_sq.NEXTVAL, 'Dipu', 5, 'B+');
+
+
+ALTER TABLE std_info
+DROP CONSTRAINT StdInfo_name_UK;
+
+
+Alter table std_info
+MODIFY (constraint StdInfo_name_UK UNIQUE (roll_no, name));
+
+
+ALTER TABLE table_name
+DISABLE CONSTRAINT constraint_name;
+
+ALTER TABLE table_name
+ENABLE CONSTRAINT constraint_name;
+
+
+
+Select last_name||' earns ' || NVL(to_char(commission_pct,'fm90D00'),'No') ||' commission per month' AS "Commission Status"
+From employees;
+
+
+
+Select last_name, job_id Job, salary
+from employees
+where (job_id = 'SA_REP' OR job_id = 'ST_CLERK')
+AND ( salary NOT IN(2500,3500,7000));
+
+
+Select employee_id employee id, first_name||' '||last_name "Full Name", commission_pct Old_comm, NVL2(commission_pct,commission_pct+0.10,0.05) New_com
+From employees; 
+
+Select employee_id "employee id", first_name||' '||last_name "Full Name", commission_pct Old_comm, 
+CASE NVL(commission_pct,0) when 0 Then 0.05
+Else commission_pct+0.10 END New_com
+From employees; 
+
+Select employee_id "employee id", first_name||' '||last_name "Full Name", commission_pct Old_comm, 
+CASE when (commission_pct is null) Then 0.05
+Else commission_pct+0.10 END New_com
+From employees; 

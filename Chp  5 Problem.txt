@@ -1,0 +1,59 @@
+Select Last_name, Length(last_name)
+From EMPLOYEES
+Where  last_name Like UPPER(('&a%'))
+Order By 1;
+
+
+select last_name, LPAD(' ',(salary/2000),'*') EMPLOYEES_AND_THEIR_SALARIES
+From Employees Order By 2 Desc;
+
+SET WRAP OFF
+SET LINESIZE 100
+
+
+
+
+
+
+
+1.
+SELECT LAST_NAME||' earns '||to_char(salary,'fm$99g99g99g999d00')|| ' monthly but wants '||to_char(salary*3,'fm$99g99g99g999d00') As "Dream Salary"
+From employees;
+
+2.
+SELECT last_name, Hire_date, To_char(Next_day(Add_months(Hire_date,6),'Monday'),'fmDay, "the" DDSPth "of" Month, YYYY') AS Review
+From employees;
+
+3.
+select last_name, NVL(To_char(commission_pct),'No Commission')
+From employees;
+
+4.
+select JOB_ID,
+CASE Job_ID When 'AD_PRES' Then 'A'
+When 'ST_MAN' Then 'B'
+When 'IT_PROG' Then 'C'
+When 'SA_REP' Then 'D'
+When 'ST_CLERK' Then 'E'
+Else '0' End "GRADE"
+From employees;
+
+5.
+select JOB_ID,
+CASE  When Job_ID = 'AD_PRES' Then 'A'
+When Job_ID = 'ST_MAN' Then 'B'
+When Job_ID = 'IT_PROG' Then 'C'
+When Job_ID = 'SA_REP' Then 'D'
+When Job_ID = 'ST_CLERK' Then 'E'
+Else '0' End "GRADE"
+From employees;
+
+6.
+select JOB_ID,
+DECODE(Job_ID, 'AD_PRES','A',
+'ST_MAN' , 'B',
+'IT_PROG' , 'C',
+'SA_REP' , 'D',
+'ST_CLERK' , 'E',
+'0') GRADE
+From employees;

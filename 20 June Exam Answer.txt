@@ -1,0 +1,30 @@
+1.
+select employee_id "Employee No", first_name||' '||last_name "Full Name", (salary*NVL(commission_pct,0))+salary "Monthly Salary", 
+((salary*NVL(commission_pct,0))+salary)*12 "Yearly Salary", (salary*NVL(commission_pct,0))*12 "Yearly Commission"
+From employees;
+
+
+2.
+Select employee_id ID, last_name Name, Salary "Top Paid Salary"
+From employees
+where department_id = 90
+Order By Salary desc
+fetch first 3 rows only;
+
+
+3.
+Select employee_id ID, last_name Name, Salary "Least Paid Salary"
+From employees
+Order By Salary asc
+fetch first 5 rows only;
+
+
+4.
+select last_name||' joined on '||to_char(hire_date,'fmDdspth Month, YYYY')||' as '||job_id||' with starting salary '||to_char(salary,'fm$99G99G999D00') "For Each Employees"
+From employees;
+
+
+5.
+Select employee_id ID, last_name Name, hire_date, TRUNC((Months_between(sysdate,hire_date))/12) "Working Duretion in Year"
+From employees
+Where department_id = 50;

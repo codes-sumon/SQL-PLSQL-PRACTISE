@@ -1,0 +1,76 @@
+1. Write a query to display the number of people with the same job. 
+
+2. Display the last name, job, department number, and the department name for all employees who work in Toronto.
+
+3. Create a report for HR that displays the last name and salary of every employee who reports to King.
+
+4. The HR department needs a report that displays the last name, department number, and job ID of all employees whose department location ID is 1700.
+
+5. The HR department wants a query to display all unique job IDs from the EMPLOYEES table.
+
+
+
+Answer
+-----------------------------------
+1.
+SELECT job_id, count(employee_id) Number_of_People
+FROM employees
+GROUP BY job_id;
+
+2.
+
+
+SELECT e.last_name, e.job_id,e.department_id,d.department_name
+FROM employees e JOIN departments d
+ON( e.department_id=d.department_id)
+JOIN locations l
+ON(l.location_id=d.location_id)
+WHERE l.city = 'Toronto';
+
+3.
+SELECT last_name, salary
+FROM employees
+WHERE manager_id IN (SELECT employee_id FROM employees Where last_name = 'King');
+
+4.
+SELECT e.last_name, e.department_id, e.job_id
+FROM employees e JOIN departments d
+ON( e.department_id=d.department_id)
+WHERE d.location_id= 1700;
+
+5.
+SELECT DISTINCT job_id
+FROM employees;
+
+-----------------------
+DECLARE
+  CURSOR EMP_CUR IS
+  SELECT ROWNUM, EMPLOYEE_ID, LAST_NAME FROM EMPLOYEES;
+  --V_EMP EMP_CUR%ROWTYPE;
+  
+BEGIN
+  FOR EMP IN EMP_CUR LOOP
+   DBMS_OUTPUT.PUT_LINE(EMP.ROWNUM||' '||EMP.LAST_NAME||' '||EMP.EMPLOYEE_ID);
+  END LOOP;
+END;
+
+---------------------------------
+
+DECLARE
+  CURSOR EMP_CUR IS
+  SELECT ROWNUM, EMPLOYEE_ID, LAST_NAME FROM EMPLOYEES;
+  V_EMP EMP_CUR%ROWTYPE;
+  
+BEGIN
+  OPEN EMP_CUR;
+  LOOP
+    FETCH EMP_CUR INTO V_EMP;
+    DBMS_OUTPUT.PUT_LINE(V_EMP.EMPLOYEE_ID||' '||V_EMP.LAST_NAME);
+    EXIT WHEN EMP_CUR%NOTFOUND;
+  END LOOP;
+  
+  IF EMP_CUR%ISOPEN THEN
+    CLOSE EMP_CUR;
+  END IF;
+END;
+-----------------------
